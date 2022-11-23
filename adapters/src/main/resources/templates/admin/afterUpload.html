@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="/resources/css/style.css"/>
+    <title th:text="#{menu.mainPage}"></title>
+<body>
+    <th th:replace="/includes/menu :: menu"> </th>
+    <th th:replace="/includes/admenu :: admenu"> </th>
+
+    <h3 id="h2Margin" align="center" th:if="${message!=null}" th:text="${message}" ></h3>
+
+    <form id="files" action="#" th:action="@{/admin/files/1}"
+             method="GET" enctype="multipart/form-data">
+        <button type="submit" style="font-size: large" th:text="#{file.afterEdit.back}"></button>
+    </form>
+
+</body>
+</html>

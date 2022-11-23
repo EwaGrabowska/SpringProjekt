@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="/resources/css/style.css"/>
+    <title th:text="#{error.errorPage}"></title>
+</head>
+<body>
+<div th:replace="/includes/menu :: menu"> </div>
+<div align="center">
+    <h2></h2>
+    <img th:src="@{/resources/images/error.jpg}" />
+    <h2></h2>
+</div>
+
+<h2 th:text="#{error.defaultErrorMessage}"></h2>
+
+</body>
+</html>

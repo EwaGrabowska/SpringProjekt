@@ -1,0 +1,12 @@
+<div th:fragment="admenu" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	<sec:authorize access="hasRole('ROLE_ADMIN', 'ROLE_SUPERADMIN')">
+		<table width="100%" border="0" cellpadding="8" cellspacing="4" class="tableMenuBg" bgcolor="#cfd9db">
+			<tr>
+				<td align="left">
+					<a href="/admin/users/1" th:text="#{menu.users}"></a>&nbsp;&nbsp;
+					<a href="/admin/files/1" th:text="#{menu.files}"></a>&nbsp;&nbsp;
+				</td>
+			</tr>
+		</table>
+	</sec:authorize>
+</div>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="/resources/css/style.css"/>
+    <title th:text="#{menu.mainPage}"></title>
+</head>
+<body>
+    <div th:replace="/includes/menu :: menu"> </div>
+    <h1 th:if="${message!=null}" th:text="${message}"></h1>
+    <div th:replace="/includes/argo :: argo"> </div>
+
+    <form id="files" action="#" th:action="@{/files/1}" method="GET" enctype="multipart/form-data">
+        <button type="submit" style="font-size: large">
+            <label th:text="#{user.file.download}"/>
+            <img th:src="@{/resources/images/download.jpg}" width="20" height="20"/>
+        </button>
+    </form>
+</body>
+</html>

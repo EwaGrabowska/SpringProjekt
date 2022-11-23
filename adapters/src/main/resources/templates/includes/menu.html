@@ -1,0 +1,24 @@
+<div th:fragment="menu" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+ <div id="seaImage"></div>
+    <table width="100%" border="0" cellpadding="8" cellspacing="4" class="tableMenuBg" bgcolor="#cfd9db">
+        <tr>
+            <td align="left" width="500">
+                <div>
+                    <a href="/" th:text= "#{menu.mainPage}"></a>&nbsp;&nbsp;
+                    <a href="/admin" th:text="#{menu.adminPage}" sec:authorize="hasAnyRole
+                    ('ROLE_ADMIN', 'ROLE_SUPERADMIN')"></a>
+                </div>
+            </td>
+            <td align="right">
+                <div sec:authorize="hasRole('ANONYMOUS')">
+                    <a href="/login" th:text="#{menu.login}"></a>&nbsp;&nbsp;
+                    <a href="/register" th:text="#{menu.register}"></a>&nbsp;&nbsp;
+                </div>
+                <div sec:authorize="isAuthenticated()">
+                    <a href="/profil" th:text="#{menu.profil}"></a>&nbsp;&nbsp;
+                    <a href="/logout" th:text="#{menu.logout}"></a>&nbsp;&nbsp;
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="/resources/css/style.css"/>
+    <title th:text="#{profil.userDane}"></title>
+</head>
+<body>
+    <div th:replace="/includes/menu :: menu"> </div>
+    <div align="center">
+        <h2 th:text="#{profil.userDane}"></h2>
+    </div>
+    <!--            /*@thymesVar id="user" type="com.spring.start.springProjekt.user.User>"*/-->
+    <table width="500" border="0" cellpadding="4" cellspacing="1"
+           align="center">
+        <tr>
+            <td width="130" align="right" th:text="#{register.name}"  ></td>
+            <td width="270" align="left" th:text="${user.name}" size="28"></td>
+        </tr>
+        <tr>
+            <td width="130" align="right" th:text="#{register.lastName}"></td>
+            <td width="270" align="left" size="28" th:text="${user.lastName}"></td>
+        </tr>
+        <tr>
+            <td width="130" align="right" th:text="#{register.email}"></td>
+            <td width="270" align="left" size="28" th:text="${user.email}"></td>
+        </tr>
+        <tr>
+            <td width="130" align="right" th:text="#{register.password}"></td>
+            <td width="270" align="left" size="28" th:text="#{password.code}"></td>
+        </tr>
+    </table>
+    <table width="500" border="0" cellpadding="4" cellspacing="1" align="center">
+
+        <tr>
+            <td align="center">
+                <button type="button" th:text="#{button.profileDateChange}" class="formbutton" th:onclick="|window.location.href='/editprofil'|"/>
+            </td>
+            <td align="center">
+                <button type="button" th:text="#{button.passwordChange}" class="formbutton" th:onclick="|window.location.href='/editpassword'|"/>
+            </td>
+            <td align="center">
+                <button type="button" th:text="#{button.deleteProfile}" class="formbutton" th:onclick="|window.location.href='/delete'|"/>
+            </td>
+        </tr>
+
+    </table>
+
+</body>
+</html>

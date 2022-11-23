@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="/resources/css/style.css"/>
+    <title th:text="#{menu.files}"></title>
+    <script type="text/javascript" th:inline="javascript">
+        function changeTrBg(row) {
+            row.style.backgroundColor = "#e6e6e6";
+        }
+
+        function defaultTrBg(row) {
+            row.style.backgroundColor = "#f0f8ff";
+        }
+
+        function startSerach(pParam) {
+            var searchWord = document.getElementById('searchString').value;
+            var page = parseInt(document.getElementById('cp').value) + parseInt(pParam);
+
+            if (searchWord.length < 1) {
+                document.getElementById("errorSearch").innerHTML = [[#{error.searchString.toShort}]];
+                return false;
+            } else {
+                document.getElementById("errorSearch").innerHTML = "";
+                var searchLink ='/admin/files/search/' + searchWord + '/' + 1;
+                window.location.href = searchLink;
+            }
+        }
+
+    </script>
+</head>
+<body>
+<div th:replace="/includes/menu :: menu"> </div>
+<div th:replace="/includes/admenu :: admenu"> </div>
+<h1 th:if="${message!=null}" th:text="${message}"></h1>
+<h2 th:text="#{menu.files}"></h2>
+
+<h3></h3>
+
+<form id="uploadForm" action="#" th:action="@{/admin/files/upload}"
+      method="POST" modelAttribute="fileupload" enctype="multipart/form-data">
+    <input type="file" name="filename" id="filename"/>
+    <button type="submit" th:text="#{button.upload}"/>
+</form>
+
+<div align="center" padding-top="20">
+    <div align="right" style="width: 1000px; padding: 2px;">
+        <input type="hidden" name="cp" id="cp" value="${currentPage}"/>
+        <input type="text" id="searchString" th:value="${searchWord}"/>&nbsp;&nbsp;
+        <button type="button" th:text="#{button.search}"
+                onclick="startSerach(0);"/>
+        <span id="errorSearch" style="color: red;"></span>
+        <button type="button" th:text="#{button.clean}" th:onclick="|window.location.href='/admin/files/1'|" />
+    </div>
+    <table width="1000" border="0" cellpadding="6" cellspacing="2" bgcolor="#f0f8ff">
+        <tr bgcolor="#66CC99">
+            <td width="50" align="center"></td>
+            <td width="225" align="center"><b th:text="#{file.platformNumber}"></b></td>
+            <td width="325" align="center"><b th:text="#{file.creationDate}"></b></td>
+            <td width="100" align="center"><b th:text="#{file.projectName}"></b></td>
+            <td width="100" align="center"><b th:text="#{file.nameOfPrincipalInvestigator}"></b></td>
+            <td width="100" align="center"><b th:text="#{file.featureType}"></b></td>
+            <td width="50" align="center"><b th:text="#{admin.file.delete}"></b></td>
+            <td width="50" align="center"><b th:text="#{file.download}"></b></td>
+        </tr>
+        <!--        /*@thymesVar id="userList" type="java.util.List<com.spring.start.springProjekt.netcdfFfile.ArgoFile>"*/-->
+        <dl th:each="f : ${fileList}">
+            <tr>
+                <td align="center" th:text="${fileList.indexOf(f) + 1+ (currentPage-1)*10}"></td>
+                <td align="left"><a th:text="| ${f.platformNumber}|"></a></td>
+                <td align="left"><a th:text="| ${f.creationDate}|"></a></td>
+                <td align="center"><a th:text="| ${f.projectName}|"></a></td>
+                <td align="center"><a th:text="| ${f.nameOfPrincipalInvestigator}|"></a></td>
+                <td align="center"><a th:text="| ${f.featureType}|"></a></td>
+
+                <td align="center" >
+                    <a th:href="@{'/admin/files/delete/' + ${f.id}}">
+                        <img src="/resources/images/delete.jpg" width="16" height="16"
+                             th:title="#{delete.file}"/>
+                    </a>
+                </td>
+                <td align="center" >
+                    <a th:href="@{'/admin/files/download/' + ${f.id}}">
+                        <img th:src="@{/resources/images/download.jpg}" width="16" height="16"
+                             title=th:text="#{file.download}"/>
+                    </a>
+                </td>
+            </tr>
+        </dl>
+    </table>
+    <table width="1000" border="0" cellpadding="6" cellspacing="0" bgcolor="#66CC99">
+        <tr>
+            <th th:if="${currentPage > 1}" align="left" >
+                <button type="button" th:text="#{link.poprzedni}"
+                        th:onclick="|window.location.href='/admin/files/${currentPage - 1}'|"/>
+            </th>
+            <td align="center" width="850"  th:text="|#{info.page} ${currentPage} #{info.from} ${totalPages}|"></td>
+            <th th:if="${currentPage < totalPages}" align="right">
+                <button type="button" th:onclick="|window.location.href='/admin/files/${currentPage + 1}'|"
+                        th:text="#{link.nastepny}"></button>
+            </th>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="/resources/css/style.css"/>
+    <title th:text="#{profilEdit.pageName}"></title>
+</head>
+<body>
+    <th th:replace="/includes/menu :: menu"> </th>
+    <th th:replace="/includes/admenu :: admenu"> </th>
+    <h2 th:text="#{menu.edit}"></h2>
+
+    <!--            /*@thymesVar id="user" type="com.spring.start.springProjekt.user.User>"*/-->
+    <form id="usersForm" action="#" method="post" th:object=${user} th:action="@{'/admin/users/updateuser/' + ${user.id}}" enctype="multipart/form-data">
+        <input type="hidden" th:value="${user.id}" th:attr="name='id'"/>
+        <table width="500" border="0" cellpadding="4" cellspacing="1"
+               align="center">
+            <tr></tr>
+            <tr>
+                <td width="250" align="right" th:text="#{register.name}"  ></td>
+                <td width="250" align="left" th:text="${user.name}"></td>
+            </tr>
+            <tr>
+                <td width="250" align="right" th:text="#{register.lastName}"></td>
+                <td width="250" align="left" th:text="${user.lastName}"></td>
+            </tr>
+            <tr>
+                <td width="250" align="right" th:text="#{register.email}"></td>
+                <td width="250" align="left" th:text="${user.email}"></td>
+            </tr>
+            <tr>
+                <td width="250" align="right" th:text="#{register.password}"></td>
+                <td width="250" align="left" th:text="#{password.code}"></td>
+            </tr>
+            <tr>
+                <td width="250" align="right" th:text="#{profil.rola}"></td>
+                <td width="250" align="left">
+                    <select th:field="*{roleNumber}" th:value="${user.roleNumber}">
+                        <option th:value="1" th:text="#{word.admin}"></option>
+                        <option th:value="2" th:text="#{word.user}"></option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td width="250" align="right" th:text="#{profil.czyAktywny}"></td>
+                <td width="250" align="left">
+                    <select th:field="*{active}" th:value="${user.active}">
+                        <option th:value="0" th:text="#{word.nie}"></option>
+                        <option th:value="1" th:text="#{word.tak}"></option>
+                    </select>
+                </td>
+            </tr>
+            <tr></tr>
+            <tr>
+                <td colspan="2" align="center">
+                    <button type="submit" th:text="#{button.save}" class="formbutton"/>
+                    <button type="button" th:text="#{button.cancel}" class="formbutton" th:onclick="|window.location.href='/admin/users/1'|"/>
+                </td>
+            </tr>
+
+        </table>
+
+    </form>
+
+</body>
+</html>

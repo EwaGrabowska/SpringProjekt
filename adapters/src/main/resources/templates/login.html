@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="/resources/css/style.css"/>
+    <title th:text="#{logowanie.pageName}"></title>
+</head>
+<body>
+    <div th:replace="/includes/menu :: menu"> </div>
+    <h2 th:text="#{logowanie.pageName}"></h2>
+    <form id="loginForm" action="#" th:action="@{/login}" method="POST">
+        <table width="350" border="0" cellpadding="4" cellspacing="1" align="center">
+            <tr><font color="red">
+                <td colspan="2" align="center" th:if="${error!=null}" th:text="${error}" class="alert"></td>
+            </font>
+            </tr>
+            <tr>
+                <td align="right" width="140" th:text="#{register.email}"></td>
+                <td align="left">
+                    <input name="username" type="text" class="form-control"
+                    autofocus="true" />
+                </td>
+            </tr>
+            <tr>
+                <td align="right" width="140" th:text="#{register.password}"></td>
+                <td align="left">
+                    <input name="password" type="password" class="form-control"/>
+                </td>
+            </tr>
+
+            <tr>
+                <td align="right" width="150">
+                </td>
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                <td align="left">
+                    <button type="submit">Zaloguj</button>
+                </td>
+            </tr>
+            <tr>
+                <td align="right" width="150" th:text="#{logowanie.rejestracja}"></td>
+                <td align="left" >
+                    <button type="button">
+                        <a href="/register">Rejestracja</a>
+                    </button>
+                </td>
+            </tr>
+
+        </table>
+    </form>
+
+
+</body>
+</html>

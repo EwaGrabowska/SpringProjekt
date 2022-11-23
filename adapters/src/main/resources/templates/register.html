@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="/resources/css/style.css"/>
+    <title th:text="#{menu.register}"></title>
+</head>
+<body>
+    <div th:replace="/includes/menu :: menu"> </div>
+    <h2 th:text="#{menu.register}"></h2>
+    <p align="center" th:if="${message!=null}" th:text="${message}" ></p>
+    <!--        /*@thymesVar id="user" type="com.spring.start.springProjekt.user.DTO.UserQueryDTO"*/-->
+    <form id="usersForm" action="#" method="post" th:object=${user} th:action="@{/adduser}" >
+
+        <table width="500" border="0" cellpadding="4" cellspacing="1"
+               align="center">
+
+            <tr>
+                <td colspan="2" align="center"  th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="alert"></td>
+            </tr>
+            <tr>
+                <td width="130" align="right" th:text="#{register.name}"  ></td>
+                <td width="270" align="left" >
+                    <input name="name" type="text" size="28" id="name" th:field="*{name}">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" class="alert"></td>
+            </tr>
+            <tr>
+                <td width="130" align="right" th:text="#{register.lastName}"></td>
+                <td width="270" align="left">
+                    <input name="lastName" type="text" size="28" id="lastName" th:field="*{lastName}">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center" th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="alert">></td>
+            </tr>
+            <tr>
+                <td width="130" align="right" th:text="#{register.email}"></td>
+                <td width="270" align="left">
+                    <input name="email" type="text" size="28" id="email" th:field="*{email}">
+                </td>
+            </tr>
+            <tr><font color="red">
+
+                <td colspan="2" align="center" th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="alert"></td>
+                </font>
+
+            </tr>
+            <tr>
+                <td width="130" align="right" th:text="#{register.password}"></td>
+                <td width="270" align="left">
+                    <input name="password" type="text" size="28" id="password" th:field="*{password}">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center">
+                    <button type="submit" th:text="#{button.register}" class="formbutton"/>
+                    <button type="button" th:text="#{button.cancel}" class="formbutton" th:onclick="|window.location.href='/'|"/>
+                </td>
+            </tr>
+
+        </table>
+
+    </form>
+</body>
+</html>

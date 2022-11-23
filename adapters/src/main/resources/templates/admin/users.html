@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="/resources/css/style.css"/>
+    <title th:text="#{menu.users}"></title>
+    <script type="text/javascript" th:inline="javascript">
+        function changeTrBg(row) {
+            row.style.backgroundColor = "#e6e6e6";
+        }
+
+        function defaultTrBg(row) {
+            row.style.backgroundColor = "#f0f8ff";
+        }
+
+        function startSerach(pParam) {
+            var searchWord = document.getElementById('searchString').value;
+            var page = parseInt(document.getElementById('cp').value) + parseInt(pParam);
+
+            if (searchWord.length < 1) {
+                document.getElementById("errorSearch").innerHTML = [[#{error.searchString.toShort}]];
+                return false;
+            } else {
+                document.getElementById("errorSearch").innerHTML = "";
+                var searchLink ='/admin/users/search/' + searchWord + '/' + 1;
+                window.location.href = searchLink;
+            }
+        }
+
+    </script>
+</head>
+<body>
+    <div th:replace="/includes/menu :: menu"> </div>
+    <div th:replace="/includes/admenu :: admenu"> </div>
+    <h1 th:if="${message!=null}" th:text="${message}"></h1>
+    <h2 th:text="#{menu.users}"></h2>
+
+    <table width="1200" border="0" cellpadding="4" cellspacing="1"
+           align="left" margin-left="20">
+        <tr>
+            <td width="250" align="right" class="text" th:text="#{admin.users.exportUsers}">
+            </td>
+            <td>
+                <form id="exportForm" action="#" th:action="@{/admin/users/export/pdf}"
+                         method="GET" enctype="multipart/form-data">
+                    <button type="submit" style="font-size: large" th:text="#{admin.users.exportUsers.pdf}"></button>
+                </form>
+            </td>
+            <td>
+                <form id="exportForm" action="#" th:action="@{/admin/users/export/xml}"
+                      method="GET" enctype="multipart/form-data">
+                    <button type="submit" style="font-size: large" th:text="#{admin.users.exportUsers.xml}"></button>
+                </form>
+            </td>
+            <td>
+                <form id="exportForm" action="#" th:action="@{/admin/users/export/json}"
+                      method="GET" enctype="multipart/form-data">
+                    <button type="submit" style="font-size: large" th:text="#{admin.users.exportUsers.json}"></button>
+                </form>
+            </td>
+            <td width="800"></td>
+        </tr>
+    </table>
+    <h3></h3>
+
+    <div align="center" padding-top="20">
+        <div align="right" style="width: 1000px; padding: 2px;">
+            <input type="hidden" name="cp" id="cp" value="${currentPage}"/>
+            <input type="text" id="searchString"/>&nbsp;&nbsp;
+            <button type="button" th:text="#{button.search}"
+            onclick="startSerach(0);"/>
+            <span id="errorSearch" style="color: red;"></span>
+            <button type="button" th:text="#{button.clean}" th:onclick="|window.location.href='/admin/users/1'|" />
+        </div>
+        <table width="1000" border="0" cellpadding="6" cellspacing="2" bgcolor="#f0f8ff">
+            <tr bgcolor="#66CC99">
+                <td width="40" align="center"></td>
+                <td width="190" align="center"><b th:text="#{register.name}"></b></td>
+                <td width="190" align="center"><b th:text="#{register.lastName}"></b></td>
+                <td width="200" align="center"><b th:text="#{register.email}"></b></td>
+                <td width="100" align="center"><b th:text="#{profil.czyAktywny}"></b></td>
+                <td width="190" align="center"><b th:text="#{profil.rola}"></b></td>
+                <td width="50" align="center"><b th:text="#{admin.file.delete}"></b></td>
+            </tr>
+            <!--        /*@thymesVar id="userList" type="java.util.List<com.spring.start.springProjekt.user.User>"*/-->
+            <dl th:each="u : ${userList}">
+                <div th:if="${u.roleNumber == 1 OR u.roleNumber == 2}">
+                    <tr onmouseover="changeTrBg(this)" onmouseout="defaultTrBg(this)" th:title="#{button.profileDateChange}">
+                        <td align="right" th:text="${userList.indexOf(u) + 1+ (currentPage-1)*10}"></td>
+                        <td align="left"><a th:href="@{'/admin/users/edit/' + ${u.id}}" th:text="| ${u.name}|"></a></td>
+                        <td align="left"><a th:href="@{'/admin/users/edit/' + ${u.id}}"  th:text="| ${u.lastName}|"></a></td>
+                        <td align="center"><a th:href="@{'/admin/users/edit/' + ${u.id}}"  th:text="| ${u.email}|"></a></td>
+                        <td align="left" >
+                            <div th:if="${u.active == 1}">
+                                <a font color="green" th:text="#{word.tak}"></a>
+                            </div>
+                            <div th:if="${u.active == 0}">
+                                <a font color="red" th:text="#{word.nie}"></a>
+                            </div>
+                        </td>
+                        <td align="left" >
+                            <div th:if="${u.roleNumber == 1}">
+                                <a th:href="@{'/admin/users/edit/' + ${u.id}}" th:text="#{word.admin}"></a>
+                            </div>
+                            <div th:if="${u.roleNumber == 2}">
+                                <a th:href="@{'/admin/users/edit/' + ${u.id}}" th:text="#{word.user}"></a>
+                            </div>
+                        </td>
+                        <td align="left" >
+                            <div th:if="${u.roleNumber == 1}">
+                                <img src="/resources/images/deleteBlack.png" width="16" height="16"/>
+                            </div>
+                            <div th:if="${u.roleNumber == 2}">
+                                <a th:href="@{'/admin/users/delete/' + ${u.id}}">
+                                    <img src="/resources/images/delete.jpg" width="16" height="16"
+                                         th:title="#{delete.user}"/>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                </div>
+                <div th:if="${u.roleNumber == 3}">
+                    <tr onmouseover="changeTrBg(this)" onmouseout="defaultTrBg(this)" th:title="#{button.editForbiden}">
+                        <td align="right" th:text="${userList.indexOf(u) + 1+ (currentPage-1)*10}"></td>
+                        <td align="left"><a th:text="| ${u.name}|"></a></td>
+                        <td align="left"><a th:text="| ${u.lastName}|"></a></td>
+                        <td align="center"><a th:text="| ${u.email}|"></a></td>
+                        <td align="left" >
+                            <div th:if="${u.active == 1}">
+                                <a font color="green" th:text="#{word.tak}"></a>
+                            </div>
+                            <div th:if="${u.active == 0}">
+                                <a font color="red" th:text="#{word.nie}"></a>
+                            </div>
+                        </td>
+                        <td align="left" >
+                            <a th:text="#{word.super}"></a>
+                        </td>
+                        <td align="left" >
+                            <img src="/resources/images/deleteBlack.png" width="16" height="16"/>
+                        </td>
+                    </tr>
+                </div>
+            </dl>
+        </table>
+        <table width="1000" border="0" cellpadding="6" cellspacing="0" bgcolor="#66CC99">
+            <tr>
+                <th th:if="${currentPage > 1}" align="left" >
+                    <button type="button" th:text="#{link.poprzedni}"
+                            th:onclick="|window.location.href='/admin/users/${currentPage - 1}'|"/>
+                </th>
+                <td align="center" width="850"  th:text="|#{info.page} ${currentPage} #{info.from} ${totalPages}|"></td>
+                <th th:if="${currentPage < totalPages}" align="right">
+                    <button type="button" th:onclick="|window.location.href='/admin/users/${currentPage + 1}'|"
+                            th:text="#{link.nastepny}"></button>
+                </th>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
