@@ -1,0 +1,13 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto17
+  post_build:
+    commands:
+      - mvn package
+      - mv monolith/target/monolith-0.0.1-SNAPSHOT.jar monolith-0.0.1-SNAPSHOT.jar
+artifacts:
+  files:
+    - monolith-0.0.1-SNAPSHOT.jar
