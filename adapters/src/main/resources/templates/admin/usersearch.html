@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <link rel="stylesheet" type="text/css" href="/resources/css/style.css"/>
+    <link rel="stylesheet" href="https://www.staticsea.blackspringboot.click/style.css"/>
     <title th:text="#{menu.users}"></title>
     <script type="text/javascript" th:inline="javascript">
         function changeTrBg(row) {
@@ -109,11 +109,11 @@
                     </td>
                     <td align="left" >
                         <div th:if="${u.roleNumber == 1}">
-                            <img src="/resources/images/deleteBlack.png" width="16" height="16"/>
+                            <img th:src="@{https://www.staticsea.blackspringboot.click/deleteBlack.png}" width="16" height="16"/>
                         </div>
                         <div th:if="${u.roleNumber == 2}">
                             <a th:href="@{'/admin/users/delete/' + ${u.id}}">
-                                <img src="/resources/images/delete.jpg" width="16" height="16"
+                                <img th:src="@{https://www.staticsea.blackspringboot.click/delete.jpg}" width="16" height="16"
                                      th:title="#{delete.user}"/>
                             </a>
                         </div>
@@ -138,7 +138,7 @@
                         <a font color="red" th:text="#{word.super}"></a>
                     </td>
                     <td align="left" >
-                        <img src="/resources/images/deleteBlack.png" width="16" height="16"/>
+                        <img th:src="@{https://www.staticsea.blackspringboot.click/deleteBlack.png}" width="16" height="16"/>
                     </td>
                 </tr>
             </div>

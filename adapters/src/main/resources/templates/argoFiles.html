@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <link rel="stylesheet" type="text/css" href="/resources/css/style.css"/>
+    <link rel="stylesheet" href="https://www.staticsea.blackspringboot.click/style.css"/>
     <title th:text="#{menu.files}"></title>
     <script type="text/javascript" th:inline="javascript">
         function changeTrBg(row) {
@@ -40,7 +40,7 @@
                 <td align="center"><a th:text="| ${f.featureType}|"></a></td>
                 <td align="center" >
                     <a th:href="@{'/admin/files/download/' + ${f.id}}">
-                        <img th:src="@{/resources/images/download.jpg}" width="16" height="16"
+                        <img th:src="@{https://www.staticsea.blackspringboot.click/download.jpg}" width="16" height="16"
                              title=th:text="#{file.download}"/>
                     </a>
                 </td>
