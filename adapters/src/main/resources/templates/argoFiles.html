@@ -39,7 +39,7 @@
                 <td align="center"><a th:text="| ${f.nameOfPrincipalInvestigator}|"></a></td>
                 <td align="center"><a th:text="| ${f.featureType}|"></a></td>
                 <td align="center" >
-                    <a th:href="@{'/admin/files/download/' + ${f.id}}">
+                    <a th:href="@{'/files/download/' + ${f.id}}">
                         <img th:src="@{https://www.staticsea.blackspringboot.click/download.jpg}" width="16" height="16"
                              title=th:text="#{file.download}"/>
                     </a>
@@ -50,18 +50,15 @@
 
     <table width="1000" border="0" cellpadding="6" cellspacing="0" bgcolor="#66CC99">
         <tr>
-            <td width="300" align="left" th:text="|#{info.page} ${currentPage} #{info.from} ${totalPages}|">
-            </td>
-            <td align="right">
-            <th th:if="${currentPage > 1}">
-                <button type="button" onclick="window.location.href='${pageContext.request.contextPath}/files/${currentPage - 1}'"
-                        th:text="#{link.poprzedni}"></button>
+            <th th:if="${currentPage > 1}" align="left" >
+                <button type="button" th:text="#{link.poprzedni}"
+                        th:onclick="|window.location.href='/files/${currentPage - 1}'|"/>
             </th>
-            <th th:if="${currentPage < totalPages}">
-                <button type="button" onclick="window.location.href='${pageContext.request.contextPath}/files/${currentPage - 1}'"
+            <td align="center" width="850"  th:text="|#{info.page} ${currentPage} #{info.from} ${totalPages}|"></td>
+            <th th:if="${currentPage < totalPages}" align="right">
+                <button type="button" th:onclick="|window.location.href='/files/${currentPage + 1}'|"
                         th:text="#{link.nastepny}"></button>
             </th>
-            </td>
         </tr>
     </table>
     </div>

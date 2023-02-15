@@ -14,6 +14,7 @@ import com.spring.start.springProjekt.netcdfFfile.vo.ArgoFileSourceId;
 import com.spring.start.springProjekt.utilities.UserUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,7 +42,8 @@ import java.util.UUID;
 @Controller
 @RequestMapping("/admin/files/")
 class AdminFilesPageController {
-
+    @Value("${amazon.S3.buckedname}")
+    private String buckedName;
     private final static int ELEMENTS = 10;
     private final static Logger LOG = LoggerFactory.getLogger(AdminPageController.class);
     private final ArgoFileService argoFileService;
@@ -122,11 +124,10 @@ class AdminFilesPageController {
                     }
                     UUID uuid = UUID.randomUUID();
                     String keyName = uuid + "." + fileExtension;
-                    String bucketName = "my-spring-app";
                     ObjectMetadata metaData = new ObjectMetadata();
                     metaData.setContentLength(bytes.length);
                     InputStream inputStream = new ByteArrayInputStream(bytes);
-                    amazonAWSFacade.putObject(bucketName, keyName, inputStream, metaData);
+                    amazonAWSFacade.putObject(buckedName, keyName, inputStream, metaData);
                     ArgoFileSnapshot argoFile = argoFileService.addFile(file, keyName);
                     ArgoFileEvent argoFileEvent = new ArgoFileEvent(ArgoFileEvent.EventType.SAVED, new ArgoFileSourceId(argoFile.getId()), UserUtilities.getLoggedUser());
                     argoFileService.saveFileEvent(argoFileEvent);
@@ -158,7 +159,7 @@ class AdminFilesPageController {
         LOG.debug("[INVOKED >>> AdminPageController.deleteFile > file id: " + id);
         ArgoFileDTO argoFileDTO = argoFileQueryRepository.findArgoFileSnapshotById(id);
 
-        amazonAWSFacade.deleteObject("my-spring-app", argoFileDTO.getKeyName());
+        amazonAWSFacade.deleteObject(buckedName, argoFileDTO.getKeyName());
         argoFileService.deleteFile(id);
 
         var event = new ArgoFileEvent(ArgoFileEvent.EventType.DELETED, new ArgoFileSourceId(id), UserUtilities.getLoggedUser());
@@ -177,7 +178,7 @@ class AdminFilesPageController {
         String keyName = argoFileDTO.getKeyName();
 
         try {
-            S3Object object = amazonAWSFacade.downloadObject("my-spring-app", keyName);
+            S3Object object = amazonAWSFacade.downloadObject(buckedName, keyName);
             InputStream inputStream = object.getObjectContent();
             ObjectMetadata metaData = object.getObjectMetadata();
             response.setContentType(metaData.getContentType());

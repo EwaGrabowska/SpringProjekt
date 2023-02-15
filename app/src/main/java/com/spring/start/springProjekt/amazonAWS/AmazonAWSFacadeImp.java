@@ -5,8 +5,8 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.spring.start.springProjekt.user.DTO.UserDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
-import org.springframework.core.env.Environment;
 
 import javax.mail.MessagingException;
 import java.io.InputStream;
@@ -15,16 +15,17 @@ import java.util.Locale;
 
 class AmazonAWSFacadeImp implements AmazonAWSFacade {
 
+    @Value("${amazon.EB.domain}")
+    private String domain;
+
 
     private final static Logger LOG = LoggerFactory.getLogger(AmazonAWSFacadeImp.class);
     private final AmazonEmailSender amazonEmailSender = new AmazonEmailSender();
     private final AmazonAWSFileService amazonFileService;
-    private final Environment environment;
     private final MessageSource messageSource;
 
-    public AmazonAWSFacadeImp(final AmazonAWSFileService amazonFileService, final Environment environment, final MessageSource messageSource) {
+    public AmazonAWSFacadeImp(final AmazonAWSFileService amazonFileService, final MessageSource messageSource) {
         this.amazonFileService = amazonFileService;
-        this.environment = environment;
         this.messageSource = messageSource;
     }
 
@@ -34,8 +35,8 @@ class AmazonAWSFacadeImp implements AmazonAWSFacade {
         String to = user.getEmail();
         String subject = messageSource.getMessage("user.register.email.title", null, locale);
         String content = messageSource.getMessage("user.register.email", null, locale) +
-                environment.getProperty("amazon.EB.domain") + "/activatelink/" + user.getActivationCode();
-        amazonEmailSender.sendEmail(environment, to, subject, content);
+                domain + "/activatelink/" + user.getActivationCode();
+        amazonEmailSender.sendEmail(to, subject, content);
 
         LOG.debug("[INVOKED >>> AmazonAWSFacadeImp.sendEmailWithActivationLink > user email: " + to);
     }

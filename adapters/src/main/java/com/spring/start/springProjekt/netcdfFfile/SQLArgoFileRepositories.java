@@ -12,7 +12,7 @@ interface SQLArgoFileQueryRepository extends Repository<ArgoFileSnapshot, Long>,
 
     ArgoFileDTO findArgoFileSnapshotById(Long id);
 
-    @Query(value = "SELECT * FROM file f WHERE f.platform_number LIKE %:param% OR f.feature_type LIKE %:param% OR f.creation_date LIKE %:param% OR f.project_name LIKE %:param% OR f.name_of_principal_investigator LIKE %:param%", nativeQuery = true)
+    @Query(value = "SELECT * FROM file WHERE platform_number LIKE %:param% OR feature_type LIKE %:param% OR creation_date LIKE %:param% OR project_name LIKE %:param% OR name_of_principal_investigator LIKE %:param%", nativeQuery = true)
     Page<ArgoFileDTO> findallsearchBy(@Param("param") String param, Pageable pageable);
 
     Page<ArgoFileDTO> findAllBy(Pageable pageable);

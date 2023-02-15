@@ -11,6 +11,7 @@ import com.spring.start.springProjekt.netcdfFfile.vo.ArgoFileSourceId;
 import com.spring.start.springProjekt.utilities.UserUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.annotation.Secured;
@@ -28,6 +29,8 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "/files/")
 class ArgoFileController {
+    @Value("${amazon.S3.buckedname}")
+    private String buckedName;
 
     private static final int ELEMENTS = 10;
     private static final Logger LOG = LoggerFactory.getLogger(ArgoFileController.class);
@@ -78,7 +81,7 @@ class ArgoFileController {
         String keyName = argoFileDTO.getKeyName();
 
         try {
-            S3Object object = amazonAWSFacade.downloadObject("myspring", keyName);
+            S3Object object = amazonAWSFacade.downloadObject(buckedName, keyName);
             InputStream inputStream = object.getObjectContent();
             ObjectMetadata metaData = object.getObjectMetadata();
             response.setContentType(metaData.getContentType());

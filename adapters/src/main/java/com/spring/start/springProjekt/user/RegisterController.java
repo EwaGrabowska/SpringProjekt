@@ -22,6 +22,7 @@ import java.util.Locale;
 
 @Controller
 class RegisterController {
+    private final String accessLevel = "ROLE_USER";
     private static final Logger LOG = LoggerFactory.getLogger(RegisterController.class);
     private final UserService userService;
     private final MessageSource messageSource;
@@ -62,7 +63,7 @@ class RegisterController {
             user.setActivationCode(AppdemoUtils.randomStringGenerator());
 
 //            amazonAWSFacade.sendEmailWithActivationLink(user, locale);
-            userService.saveNewUser(user, "ROLE_ADMIN");
+            userService.saveNewUser(user, accessLevel);
 //            model.addAttribute("message", messageSource.getMessage("user.register.success.email", null, locale));
 //            model.addAttribute("message2", messageSource.getMessage("user.register.success.email2", null, locale));
 
