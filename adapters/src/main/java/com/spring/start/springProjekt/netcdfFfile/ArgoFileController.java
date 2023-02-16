@@ -11,7 +11,7 @@ import com.spring.start.springProjekt.netcdfFfile.vo.ArgoFileSourceId;
 import com.spring.start.springProjekt.utilities.UserUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.annotation.Secured;
@@ -29,9 +29,7 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "/files/")
 class ArgoFileController {
-    @Value("${amazon.S3.buckedname}")
-    private String buckedName;
-
+    private final Environment environment;
     private static final int ELEMENTS = 10;
     private static final Logger LOG = LoggerFactory.getLogger(ArgoFileController.class);
     private final ArgoFileQueryRepository argoFileQueryRepository;
@@ -40,7 +38,8 @@ class ArgoFileController {
     private final DomainEventPublisher publisher;
 
 
-    ArgoFileController(final ArgoFileQueryRepository argoFileQueryRepository, final ArgoFileService argoFileService, final AmazonAWSFacade amazonAWSFacade, final DomainEventPublisher publisher) {
+    ArgoFileController(Environment environment, final ArgoFileQueryRepository argoFileQueryRepository, final ArgoFileService argoFileService, final AmazonAWSFacade amazonAWSFacade, final DomainEventPublisher publisher) {
+        this.environment = environment;
         this.argoFileQueryRepository = argoFileQueryRepository;
         this.argoFileService = argoFileService;
         this.amazonAWSFacade = amazonAWSFacade;
@@ -79,6 +78,7 @@ class ArgoFileController {
 
         ArgoFileDTO argoFileDTO = argoFileQueryRepository.findArgoFileSnapshotById(id);
         String keyName = argoFileDTO.getKeyName();
+        String buckedName = environment.getProperty("amazon.S3.buckedname");
 
         try {
             S3Object object = amazonAWSFacade.downloadObject(buckedName, keyName);

@@ -14,19 +14,15 @@ import com.spring.start.springProjekt.netcdfFfile.vo.ArgoFileSourceId;
 import com.spring.start.springProjekt.utilities.UserUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,7 +38,7 @@ import java.util.UUID;
 @Controller
 @RequestMapping("/admin/files/")
 class AdminFilesPageController {
-    @Value("${amazon.S3.buckedname}")
+    private final Environment environment;
     private String buckedName;
     private final static int ELEMENTS = 10;
     private final static Logger LOG = LoggerFactory.getLogger(AdminPageController.class);
@@ -52,12 +48,14 @@ class AdminFilesPageController {
     private final MessageSource messageSource;
     private final DomainEventPublisher publisher;
 
-    AdminFilesPageController(ArgoFileService argoFileService, final ArgoFileQueryRepository argoFileQueryRepository, final AmazonAWSFacade amazonAWSFacade, MessageSource messageSource, final DomainEventPublisher publisher) {
+    AdminFilesPageController(Environment environment, ArgoFileService argoFileService, final ArgoFileQueryRepository argoFileQueryRepository, final AmazonAWSFacade amazonAWSFacade, MessageSource messageSource, final DomainEventPublisher publisher) {
+        this.environment = environment;
         this.argoFileService = argoFileService;
         this.argoFileQueryRepository = argoFileQueryRepository;
         this.amazonAWSFacade = amazonAWSFacade;
         this.messageSource = messageSource;
         this.publisher = publisher;
+        this. buckedName = environment.getProperty("amazon.S3.buckedname");
     }
 
     @Secured(value = {"ROLE_ADMIN", "ROLE_SUPERADMIN"})

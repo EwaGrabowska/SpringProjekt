@@ -2,7 +2,8 @@ package com.spring.start.springProjekt.amazonAWS;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
+
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
@@ -14,17 +15,23 @@ import java.util.Properties;
 
 class AmazonEmailSender {
 
-    @Value("${from.email.address}")
     private String email;
-    @Value("${amazon.SES.username}")
     private String userName;
-    @Value("${amazon.SES.userpassword}")
     private String userPassword;
+    private Environment environment;
     private static final Logger LOG = LoggerFactory.getLogger(AmazonEmailSender.class);
-    @Value("${amazon.SAS.host}")
-    private String HOST;
+    private String host;
 
-    void sendEmail(String to, String subject, String content) throws UnsupportedEncodingException, MessagingException {
+    AmazonEmailSender() {
+    }
+
+    void sendEmail(Environment environment, String to, String subject, String content) throws UnsupportedEncodingException, MessagingException {
+        this.environment = environment;
+        this.email = environment.getProperty("from.email.address");
+        this.userName = environment.getProperty("amazon.SES.username");
+        this.userPassword = environment.getProperty("amazon.SES.userpassword");
+        this.host = environment.getProperty("amazon.SAS.host");
+
         Properties props = System.getProperties();
         Session session = Session.getDefaultInstance(props);
         MimeMessage msg = new MimeMessage(session);
@@ -34,7 +41,7 @@ class AmazonEmailSender {
         msg.setContent(content, "text/html");
 
         try (Transport transport = session.getTransport()) {
-            transport.connect(HOST, 587, userName, userPassword);
+            transport.connect(host, 587, userName, userPassword);
             transport.sendMessage(msg, msg.getAllRecipients());
 
             LOG.debug("[INVOKED >>> AmazonEmailSender.sendEmail > user email: " + to + ", email has been successfully sent");

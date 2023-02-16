@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
 import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRequest;
@@ -22,10 +23,16 @@ import java.util.Map;
 @Configuration
 class AmazonAWSConfiguration {
 
+    private final Environment environment;
+
+    AmazonAWSConfiguration(final Environment environment) {
+        this.environment = environment;
+    }
+
     @Bean
-    AmazonAWSFacade amazonAWSFacade(final AmazonAWSFileService amazonFileService,
+    AmazonAWSFacade amazonAWSFacade(final Environment environment, final AmazonAWSFileService amazonFileService,
                                     final MessageSource messageSource) {
-        return new AmazonAWSFacadeImp(amazonFileService, messageSource);
+        return new AmazonAWSFacadeImp(environment, amazonFileService, messageSource);
     }
 
     @Bean
