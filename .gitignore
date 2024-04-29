@@ -1,8 +1,10 @@
 application-aws_ebs.properties
+application-localhost.properties
 # compiled output
 /dist
 /tmp
 /out-tsc
+new/plik.txt
 
 # dependencies
 /node_modules

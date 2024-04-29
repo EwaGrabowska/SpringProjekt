@@ -38,8 +38,8 @@ import java.util.UUID;
 @Controller
 @RequestMapping("/admin/files/")
 class AdminFilesPageController {
-    private final Environment environment;
     private String buckedName;
+    private Environment environment;
     private final static int ELEMENTS = 10;
     private final static Logger LOG = LoggerFactory.getLogger(AdminPageController.class);
     private final ArgoFileService argoFileService;
@@ -55,7 +55,10 @@ class AdminFilesPageController {
         this.amazonAWSFacade = amazonAWSFacade;
         this.messageSource = messageSource;
         this.publisher = publisher;
-        this. buckedName = environment.getProperty("amazon.S3.buckedname");
+        //AWS
+        this.buckedName = environment.getProperty("AMAZON_S3_BUCKEDNAME");
+        //localhost
+//        this.buckedName = environment.getProperty("AMAZON.S3.BUCKEDNAME");
     }
 
     @Secured(value = {"ROLE_ADMIN", "ROLE_SUPERADMIN"})

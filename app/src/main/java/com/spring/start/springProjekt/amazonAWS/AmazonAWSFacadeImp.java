@@ -16,17 +16,17 @@ import java.util.Locale;
 class AmazonAWSFacadeImp implements AmazonAWSFacade {
 
     private String domain;
-    private final Environment environment;
     private final static Logger LOG = LoggerFactory.getLogger(AmazonAWSFacadeImp.class);
     private final AmazonEmailSender amazonEmailSender = new AmazonEmailSender();
     private final AmazonAWSFileService amazonFileService;
     private final MessageSource messageSource;
+    private Environment environment;
 
-    public AmazonAWSFacadeImp(Environment environment, final AmazonAWSFileService amazonFileService, final MessageSource messageSource) {
+    public AmazonAWSFacadeImp(final  Environment environment, final AmazonAWSFileService amazonFileService, final MessageSource messageSource) {
         this.environment = environment;
         this.amazonFileService = amazonFileService;
         this.messageSource = messageSource;
-        this.domain = environment.getProperty("amazon.EB.domain");
+        this.domain = environment.getProperty("AMAZON_EB_DOMAIN");
     }
 
 
@@ -36,7 +36,7 @@ class AmazonAWSFacadeImp implements AmazonAWSFacade {
         String subject = messageSource.getMessage("user.register.email.title", null, locale);
         String content = messageSource.getMessage("user.register.email", null, locale) +
                 domain + "/activatelink/" + user.getActivationCode();
-        amazonEmailSender.sendEmail(environment, to, subject, content);
+        amazonEmailSender.sendEmail(to, subject, content);
 
         LOG.debug("[INVOKED >>> AmazonAWSFacadeImp.sendEmailWithActivationLink > user email: " + to);
     }

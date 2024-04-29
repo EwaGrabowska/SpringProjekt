@@ -8,22 +8,15 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.google.gson.Gson;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import software.amazon.awssdk.regions.Region;
-import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
-import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRequest;
-import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueResponse;
-
-import java.util.Map;
 
 @Configuration
 class AmazonAWSConfiguration {
 
-    private final Environment environment;
+    private Environment environment;
 
     AmazonAWSConfiguration(final Environment environment) {
         this.environment = environment;
@@ -32,6 +25,7 @@ class AmazonAWSConfiguration {
     @Bean
     AmazonAWSFacade amazonAWSFacade(final Environment environment, final AmazonAWSFileService amazonFileService,
                                     final MessageSource messageSource) {
+        this.environment = environment;
         return new AmazonAWSFacadeImp(environment, amazonFileService, messageSource);
     }
 
@@ -44,44 +38,22 @@ class AmazonAWSConfiguration {
     AmazonS3 getAccountClient() {
         ClientConfiguration clientConfig = new ClientConfiguration();
         clientConfig.setProtocol(Protocol.HTTP);
-        String secret = getSecret();
-
-        Gson gson = new Gson();
-        Map<String, String> secretMap = gson.fromJson(secret, Map.class);
-        String accessKey = secretMap.get("accessKey");
-        String secretKey = secretMap.get("secretKey");
+        //AWS
+        String accessKey = environment.getProperty("AMAZON_S3_ACCESSKEY");
+        String secretKey = environment.getProperty("AMAZON_S3_SECRETKEY");
+//        //localhost
+//        String accessKey = environment.getProperty("AMAZON.S3.ACCESSKEY");
+//        String secretKey = environment.getProperty("AMAZON.S3.SECRETKEY");
         AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
 
         AmazonS3 s3client = AmazonS3ClientBuilder
                 .standard()
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .withClientConfiguration(clientConfig)
-                .withRegion(Regions.EU_CENTRAL_1)
+                .withRegion(Regions.EU_WEST_1)
                 .build();
 
         return s3client;
-    }
-    private String getSecret() {
-
-        String secretName = "S3credentials";
-        Region region = Region.of("eu-central-1");
-
-        SecretsManagerClient client = SecretsManagerClient.builder()
-                .region(region)
-                .build();
-
-        GetSecretValueRequest getSecretValueRequest = GetSecretValueRequest.builder()
-                .secretId(secretName)
-                .build();
-
-        GetSecretValueResponse getSecretValueResponse;
-
-        try {
-            getSecretValueResponse = client.getSecretValue(getSecretValueRequest);
-        } catch (Exception e) {
-            throw e;
-        }
-        return getSecretValueResponse.secretString();
     }
 
 }

@@ -29,13 +29,13 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "/files/")
 class ArgoFileController {
-    private final Environment environment;
     private static final int ELEMENTS = 10;
     private static final Logger LOG = LoggerFactory.getLogger(ArgoFileController.class);
     private final ArgoFileQueryRepository argoFileQueryRepository;
     private final ArgoFileService argoFileService;
     private final AmazonAWSFacade amazonAWSFacade;
     private final DomainEventPublisher publisher;
+    private Environment environment;
 
 
     ArgoFileController(Environment environment, final ArgoFileQueryRepository argoFileQueryRepository, final ArgoFileService argoFileService, final AmazonAWSFacade amazonAWSFacade, final DomainEventPublisher publisher) {
@@ -78,7 +78,10 @@ class ArgoFileController {
 
         ArgoFileDTO argoFileDTO = argoFileQueryRepository.findArgoFileSnapshotById(id);
         String keyName = argoFileDTO.getKeyName();
-        String buckedName = environment.getProperty("amazon.S3.buckedname");
+        //AWS
+        String buckedName = System.getProperty("AMAZON_S3_BUCKEDNAME");
+        //localhost
+//        String buckedName = environment.getProperty("AMAZON.S3.BUCKEDNAME");
 
         try {
             S3Object object = amazonAWSFacade.downloadObject(buckedName, keyName);
